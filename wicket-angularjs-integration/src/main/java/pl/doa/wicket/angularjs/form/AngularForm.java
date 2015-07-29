@@ -5,6 +5,7 @@ package pl.doa.wicket.angularjs.form;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.apache.wicket.IGenericComponent;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,7 +23,7 @@ import java.io.Serializable;
  * 
  */
 public abstract class AngularForm<T extends Serializable> extends
-		WebMarkupContainer implements IModelSerializer<T>, IAngularController {
+		WebMarkupContainer implements IModelSerializer<T>, IAngularController, IGenericComponent<T> {
 
 	private IModelSerializer<T> modelSerializer;
 
@@ -83,11 +84,47 @@ public abstract class AngularForm<T extends Serializable> extends
 		return modelSerializer.deserialize(json);
 	}
 
-	public final IModel<T> getModel() {
-		return (IModel<T>) getDefaultModel();
-	}
+    /**
+     * Typesafe getter for the model's object
+     * 
+     * @return the model object
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public final T getModelObject() {
+        return (T) getDefaultModelObject();
+    }
 
-	public final T getModelObject() {
-		return (T) getDefaultModelObject();
-	}
+    /**
+     * Typesafe setter for the model object
+     * 
+     * @param modelObject
+     *            the new model object
+     */
+    @Override
+    public final void setModelObject(final T modelObject) {
+        setDefaultModelObject(modelObject);
+    }
+
+    /**
+     * Typesafe getter for the page's model
+     * 
+     * @return the model
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public final IModel<T> getModel() {
+        return (IModel<T>) getDefaultModel();
+    }
+
+    /**
+     * Typesafe setter for the model
+     * 
+     * @param model
+     *            the new model
+     */
+    @Override
+    public final void setModel(final IModel<T> model) {
+        setDefaultModel(model);
+    }
 }
